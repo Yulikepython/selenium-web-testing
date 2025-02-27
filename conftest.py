@@ -17,8 +17,8 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 # 設定ファイルをインポート
 import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from selenium_web_testing.config import settings
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from config import settings
 
 
 def pytest_addoption(parser):
@@ -47,9 +47,16 @@ def driver(request):
     if browser_name == "chrome":
         options = webdriver.ChromeOptions()
         if headless:
-            options.add_argument("--headless")
+            options.add_argument("--headless=new")
         options.add_argument(f"--window-size={settings.WINDOW_WIDTH},{settings.WINDOW_HEIGHT}")
-        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        try:
+            driver = webdriver.Chrome(options=options)
+        except Exception as e:
+            print(f"Chrome WebDriverの初期化に失敗しました: {e}")
+            # 代替方法
+            driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
     
     elif browser_name == "firefox":
         options = webdriver.FirefoxOptions()
@@ -89,7 +96,12 @@ def driver(request):
 def navigate(driver, base_url):
     """指定されたパスに移動するヘルパー関数"""
     def _navigate(path=""):
-        url = f"{base_url.rstrip('/')}/{path.lstrip('/')}"
+        # 絶対URLの場合はそのまま使用
+        if path.startswith(('http://', 'https://')):
+            url = path
+        else:
+            # 相対パスの場合はベースURLと結合
+            url = f"{base_url.rstrip('/')}/{path.lstrip('/')}"
         driver.get(url)
         return driver.current_url
     

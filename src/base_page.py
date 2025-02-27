@@ -6,8 +6,8 @@
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
-from selenium_web_testing.src.page_actions import PageActions
-from selenium_web_testing.config import settings
+from src.page_actions import PageActions
+from config import settings
 
 
 class BasePage:

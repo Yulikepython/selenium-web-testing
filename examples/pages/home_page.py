@@ -5,7 +5,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from selenium_web_testing.src.base_page import BasePage
+from src.base_page import BasePage
 
 
 class HomePage(BasePage):
@@ -48,7 +48,7 @@ class HomePage(BasePage):
     def click_login_link(self):
         """ログインリンクをクリックする"""
         self.actions.click(self.LOGIN_LINK)
-        from selenium_web_testing.examples.pages.login_page import LoginPage
+        from examples.pages.login_page import LoginPage
         return LoginPage(self.driver, self.base_url)
     
     def search(self, query: str):

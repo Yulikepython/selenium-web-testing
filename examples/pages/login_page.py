@@ -6,7 +6,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from selenium_web_testing.src.base_page import BasePage
+from src.base_page import BasePage
 
 
 class LoginPage(BasePage):
